@@ -1,0 +1,130 @@
+// BookingForm.jsx
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import "./BookingForm.css";
+
+export default function BookingForm({ onSubmit }) {
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      date: "",
+      time: "",
+      guests: 1,
+      occasion: "Birthday",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email").required("Required"),
+      date: Yup.date().required("Required"),
+      time: Yup.string().required("Required"),
+      guests: Yup.number().min(1).max(20).required("Required"),
+      occasion: Yup.string().required("Required"),
+    }),
+    onSubmit: values => {
+      onSubmit(values);
+    },
+  });
+
+  return (
+    <div className="booking-ui">
+      <h1 className="heading">Reserve a Table at Little Lemon</h1>
+      <p className="subheading">Please fill out the form below to reserve your table.</p>
+
+      <form onSubmit={formik.handleSubmit} aria-label="Booking Form" className="booking-form">
+        <fieldset>
+          <legend>Booking Details</legend>
+
+          <div className="form-group">
+            <label htmlFor="name">Name:</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              onChange={formik.handleChange}
+              value={formik.values.name}
+              aria-invalid={!!formik.errors.name}
+            />
+            {formik.errors.name && <div role="alert" className="error">{formik.errors.name}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              aria-invalid={!!formik.errors.email}
+            />
+            {formik.errors.email && <div role="alert" className="error">{formik.errors.email}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="date">Date:</label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              onChange={formik.handleChange}
+              value={formik.values.date}
+              aria-invalid={!!formik.errors.date}
+            />
+            {formik.errors.date && <div role="alert" className="error">{formik.errors.date}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="time">Time:</label>
+            <select
+              id="time"
+              name="time"
+              onChange={formik.handleChange}
+              value={formik.values.time}
+              aria-invalid={!!formik.errors.time}
+            >
+              <option value="">Select a time</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+            </select>
+            {formik.errors.time && <div role="alert" className="error">{formik.errors.time}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="guests">Guests:</label>
+            <input
+              id="guests"
+              name="guests"
+              type="number"
+              min="1"
+              max="20"
+              onChange={formik.handleChange}
+              value={formik.values.guests}
+              aria-invalid={!!formik.errors.guests}
+            />
+            {formik.errors.guests && <div role="alert" className="error">{formik.errors.guests}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="occasion">Occasion:</label>
+            <select
+              id="occasion"
+              name="occasion"
+              onChange={formik.handleChange}
+              value={formik.values.occasion}
+              aria-invalid={!!formik.errors.occasion}
+            >
+              <option value="Birthday">Birthday</option>
+              <option value="Anniversary">Anniversary</option>
+            </select>
+            {formik.errors.occasion && <div role="alert" className="error">{formik.errors.occasion}</div>}
+          </div>
+
+          <button type="submit" className="submit-button">Book Now</button>
+        </fieldset>
+      </form>
+    </div>
+  );
+}
